@@ -1,0 +1,37 @@
+*casechange.txt* Lets roll the cases!
+
+Author:  Ignacio Catalina <https://github.com/icatalina/>
+License: Same terms as Vim itself (see |license|)
+
+Version: 1.0
+
+INTRODUCTION                                                      *casechange*
+
+Casechange is a plugin for rotating through different casing styles. It aims to
+fix the behaviour of ~ in visual mode.
+
+USAGE                                                       *casechange-usage*
+
+Select the piece of text you want to apply CaseChange to and press ~
+
+  helloWorld
+  HelloWorld
+  HELLO_WORLD
+  hello_world
+  hello-world
+
+For example, if you wish to change the current word, you could press viw~ and
+then keep pressing ~ until you get to the right case.
+
+KEYMAPS                                                   *casechange-keymaps*
+
+The only keymap that this plugin sets is ~, you can prevent this by setting:
+
+let g:casechange_nomap = 1
+
+ABOUT                                                       *casechange-about*
+
+Grab the latest version or report a bug on GitHub:
+
+http://github.com/icatalina/vim-case-change
+
