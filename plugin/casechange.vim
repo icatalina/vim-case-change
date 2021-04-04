@@ -27,13 +27,6 @@ function! casechange#next(str)
     let l:title = '\v\C^[A-Z][a-z0-9]*( [A-Z][a-z0-9]+)*$'     "Title Case
     let l:any = '\v\C^[a-zA-Z][a-zA-Z0-9]*(( |_|-)[a-zA-Z][a-zA-Z0-9]+)*$'     "aNy_casE  Any-case etc.
 
-    echo dash
-    echo camel
-    echo snake
-    echo upper
-    echo pascal
-    echo title
-    echo a:str
 
     if (a:str =~ l:dash)
         return substitute(a:str, '\v-+([a-z])', '\U\1', 'g')          "camelCase
