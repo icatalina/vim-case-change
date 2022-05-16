@@ -2,10 +2,6 @@
 -- Maintainer:   Ignacio Catalina
 -- Version:      1.0
 --
--- Installation:
--- Place in either ~/.vim/plugin/casechange.vim (to load at start up) or
--- ~/.vim/autoload/casechange.vim (to load automatically as needed).
---
 -- License:
 -- Copyright (c) Ignacio Catalina.  Distributed under the same terms as Vim itself.
 -- See :help license
@@ -41,7 +37,7 @@ local snake = vim.regex [==[\v\C^[a-z0-9]+(_+[a-z0-9]+)*$]==] -- snake_case
 local upper = vim.regex [==[\v\C^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$]==] -- UPPER_CASE
 local pascal = vim.regex [==[\v\C^[A-Z][a-z0-9]*([A-Z0-9][a-z0-9]*)*$]==] -- PascalCase
 local title = vim.regex [==[\v\C^[A-Z][a-z0-9]*( [A-Z][a-z0-9]+)*$]==] -- Title Case
-local any = vim.regex [==[\v\C^[a-zA-Z][a-zA-Z0-9]*(( |_|-)[a-zA-Z][a-zA-Z0-9]+)*$]==] -- -case etc.
+local any = vim.regex [==[\v\C^[a-zA-Z][a-zA-Z0-9]*((\W)[a-zA-Z][a-zA-Z0-9]+)*$]==] -- -case etc.
 
 local substitute = function(args)
 	return vim.api.nvim_call_function("substitute", args)
@@ -56,9 +52,13 @@ local tolower = function(args)
 end
 
 
-local function casechange()
-	vim.cmd [[noau normal! "zc]]
+function _G.casechange()
+	vim.cmd [[noau normal! "zd]]
+	-- vim.pretty_print(vim.api.nvim_get_mode())
 	local str = vim.fn.getreg("z")
+
+	-- local start = vim.api.nvim_buf_get_mark(0, '<')
+	-- local finish = vim.api.nvim_buf_get_mark(0, '>')
 
 	local sub
 	if dash:match_str(str) then
@@ -77,19 +77,16 @@ local function casechange()
 	elseif snake:match_str(str) then
 		sub = substitute({ str, [[\v_+]], '-', 'g' })                         -- dash-case
 	elseif any:match_str(str) then                                          -- wurst case scenario
-		local res = substitute({ str, [[\v( |_|-)([a-z])]], [[_\U\2]], 'g' }) -- snake_case
+		local res = substitute({ str, [[\v(\W)([a-z])]], [[_\U\2]], 'g' }) -- snake_case
 		sub = tolower({ res })
 	end
 
-	-- vim.cmd(t("normal <c-r>=z<cr>"))
-	-- vim.cmd("normal! a"..sub)
 	vim.fn.setreg("z", sub)
-	vim.cmd('normal! ' .. [["zpv`[]])
+	vim.cmd('normal! ' .. [["zPv`[]]) -- FIXED: by using: d - rather than c at fun beg
 end
 
-vim.keymap.set('v', '~', function() casechange() end, { noremap = true, silent = true, desc = 'Case Change Plug' })
+vim.keymap.set('v', '~', function() casechange() end, { noremap = true, silent = true, desc = 'CaseChange Plug' })
 -- vnoremap ~ "<C-R>=casechange(@z)<CR><Esc>v`[
-
 
 my_plugin.options = nil
 return my_plugin
